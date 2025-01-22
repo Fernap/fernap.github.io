@@ -199,7 +199,7 @@
 | |  | | '_ \ / _ \ '__/ /\ \  \___ \| |\/| |    | |/ _ \ / _ \| |
 | |__| | |_) |  __/ | / ____ \ ____) | |  | |    | | (_) | (_) | |
  \____/|_.__/ \___|_|/_/    \_\_____/|_|  |_|    |_|\___/ \___/|_|
-         Version 2.1                By Vitor Vilela & Fernap
+         Version 2.0                By Vitor Vilela & Fernap
 </pre>
 
         <p>
@@ -236,26 +236,11 @@
         </ul>
 
         <p>
-            Q. What's new in 2.1?
-        </p>
-        <p>
-            A. Version 2.1 of UberASM Tool is a modest update compared to the 2.0 update.
-        </p>
-        <ul>
-            <li>UAT now uses asar 1.91.  This will sometimes cause older resources to produce deprecation warnings.  These are hidden by default, but you can enable them (and you should when developing new resources!) with a new list file command.  See <a href="#ListFile>">The List File</a> for more information.</li>
-            <li>Some new command line options are available; see <a href="#Running">Running UberASM Tool</a> for details.</li>
-            <li>(For programmers) Resources can take a variable number of extra bytes in addition to a fixed number, as before.  See <a href="#ExtraBytes">Extra Bytes</a> for details.</li>
-            <li>Extra bytes can now be given in 2- and 3-byte chunks (with endianness handled) by enclosing in <code>()</code>s and <code>[]</code>s, respectively.  See See <a href="#ListFile>">The List File</a> for more information.</li>
-            <li>Resources in level/gamemode/overworld <code>*</code> can now be omitted from specific levels by prefixing them with a </code>-</code>.  See <a href="#ListFile>">The List File</a> for details.</li>
-            <li>As before, a few tweaks and fixes.  See the changelog for a full list.</li>
-        </ul>
-
-        <p>
             Q. Help!  ___ doesn't work anymore!
         </p>
 
         <p>
-            A. That's not a question!  See <a href="#Issues">Common Issues</a> for some potential hiccups, and see the <code class="path">incompatibilities.txt</code> file for known incompatibilities and what to do about them.
+            A. That's not a question!  See the <code class="path">incompatibilities.txt</code> file for known incompatibilities and what to do about them.
         </p>
 
         <p>
@@ -320,7 +305,7 @@
             UberASM Tool has the command line syntax:
         </p>
 <pre>
-&gt; UberASMTool [options...] [&lt;list file&gt; [&lt;ROM file&gt;]]
+&gt; UberASMTool [&lt;list file&gt; [&lt;ROM file&gt;]]
 </pre>
          <p>
             If no <code>&lt;list file&gt;</code> is given, UberASM Tool will use the file <code class="path">list.txt</code>.  If no <code>&lt;ROM file&gt;</code> is given, UberASM Tool will use the ROM file given by the <code>rom:</code> command in the list file.  For example:
@@ -331,24 +316,7 @@ rom: MyHack.smc         ; ROM file to use.
 
         <p>
             All files may be given either as absolute paths or as paths relative to the UberASM Tool executable file.  Alternatively, you can simply double click the executable and it will run as if no command line arguments were given.
-        </p>
-
         <p>
-            The following options are supported (and strictly speaking may be placed in any order in the whole command line):
-        </p>
-        <dl>
-            <dt><code>-d <directory></code></dt>
-            <dd>Sets UberASM Tool's current working directory to <code>directory</code>, which can itself be either an absolute path, or relative to the executable.  Any further relative paths will be relative to this, rather than the default of the executable.</dd>
-
-            <dt><code>-p</code></dt>
-            <dd>Disables the <code>Press any key to continue...</code> prompt when finished.</dd>
-
-            <dt><code>-q</code></dt>
-            <dd>Enables quiet mode (the same as setting <code>verbose: quiet</code> in the list file).  This supresses a couple messages that can get displayed before the list file is actually processed.</dd>
-
-            <dt><code>-v</code></dt>
-            <dd>Prints the version number of the program and exits.</dd>
-        </dl>
 
         <h3 id="ListFile">The List File</h3>
 
@@ -386,9 +354,6 @@ rom: MyHack.smc         ; ROM file to use.
                 </dl>
             </dd>
 
-            <dt><code>deprecations: &lt;on/off&gt;</code></dt>
-            <dd>When set to "off", deprecation warnings from asar are not displayed.  This command is optional and defaults to "off" if not specified.  It's recommended to turn "on" deprecation warnings when developing new resources, but they're otherwise not usually relevant.</dd>
-
             <dt><code>rom: &lt;ROM file&gt;</code></dt>
             <dd>This specifies the ROM file that UberASM Tool will use.  A ROM file may also be given on the command line, which will override the list file command (and the command may be omitted altogether in this case).</dd>
 
@@ -422,15 +387,11 @@ rom: MyHack.smc         ; ROM file to use.
         </p>
 
         <p>
-            If a resource uses extra bytes (see below for more information), you must specify them after the resource file name with a <code>:</code> followed by the actual bytes to use.  For more than one byte, separate them by spaces.  Bytes are given in hexadecimal by default (or explicitly by prefixing with <code>$</code> or <code>0x</code>), but you can also give them in decimal by prefixing with an <code>@</code>, or in binary by prefixing with a <code>%</code>.  You may also specify negative numbers here.  So for example, <code>-10</code>, <code>F0</code>, <code>$f0</code>, <code>-@16</code>, <code>@240</code>, and <code>%11110000</code> all refer to the same value.  As of version 2.1, you can also speciy 2- and 3-byte values as a single number.  For 2-byte values (words), enclose them in parentheses, e.g. <code>(@1000)</code>, and for 3-byte values (longs), enclose them in brackets, e.g. <code>[12AB00]</code>.  This is especially useful for supplying large decimal values to resources without having to convert to little-endian hex (see below for more info).
+            If a resource uses extra bytes (see below for more information), you must specify them after the resource file name with a <code>:</code> followed by the actual bytes to use.  For more than one byte, separate them by spaces.  Bytes are given in hexadecimal by default (or explicitly by prefixing with <code>$</code> or <code>0x</code>), but you can also give them in decimal by prefixing with an <code>@</code>, or in binary by prefixing with a <code>%</code>.  You may also specify negative numbers here.  So for example, <code>-10</code>, <code>F0</code>, <code>$f0</code>, <code>@-16</code>, <code>@240</code>, and <code>%11110000</code> all refer to the same value.
         </p>
 
         <p>
-            You may also assign more than one resource to each level/game mode/overworld map, including <code>*</code>.  Simply add them in order, separated by commas.  You may split resources over separate lines if you wish, but the comma must go on the same line as the preceding resource.  Note that if multiple resources are given for a single level (or game mode or overworld map), UAT executes them in the order they are given, and resources under <code>*</code> are called first.  This usually doesn't matter, but it can sometimes be something to keep in mind.
-        </p>
-
-        <p>
-            As of version 2.1, you can now skip a resource that was used on level/overworld/gamemode <code>*</code>	by adding a <code>-</code> in front of the file name.  Note that for this to work, the resource must actually be used in <code>*</code>, and <code>*</code> must be placed <em>before</em> where it's actually being skipped.  A potential, nonobvious application of this feature is that you can skip a resource on <code>*</code> that uses extra bytes, and then re-add it with a different set of extra bytes to use a different set just for that level/overworld/gamemode.  See the example list file below for an example use.
+            You may also assign more than one resource to each level/game mode/overworld map, including <code>*</code>.  Simply add them in order, separated by commas.  You may split resources over separate lines if you wish, but the comma must go on the same line as preceding resource.  Note that if multiple resources are given for a single level (or game mode or overworld map), UAT executes them in the order they are given, and resources under <code>*</code> are called first.  This usually doesn't matter, but it can sometimes be something to keep in mind.
         </p>
 
         <p>
@@ -446,9 +407,7 @@ level:
        waves.asm, gradient.asm
 
 overworld:
-* music.asm, yoshi.asm : 00
-0 -music.asm
-1 -yoshi.asm, yoshi.asm:FF
+* music.asm
 
 level:
 107 special.asm:@100, ../overworld/music.asm
@@ -458,9 +417,7 @@ level:
             <li>level 105 is assigned the resource <code class="path">incio.asm</code> (which is in the <code class="path">level/</code> folder)</li>
             <li>level 106 is assigned the three resources <code class="path">incio.asm</code>, <code class="path">waves.asm</code>, and <code class="path">gradient.asm</code></li>
             <li><code>overworld:</code> says we're now giving resources for overworld maps</li>
-            <li>the resource <code class="path">music.asm</code> (in the <code class="path">overworld/</code> folder) is assigned to all overworlds, as is <code class="path">yoshi.asm</code> with an extra byte of <code>00</code></li>
-            <li>overworld map 0 skips calling <code class="path">music.asm</code> (but still calls <code class="path">yoshi.asm</code>)</li>
-            <li>overworld map 1 skips calling <code class="path">yoshi.asm</code>, but then re-adds it with a different extra byte value of </code>FF</code>
+            <li>the resource <code class="path">music.asm</code> (in the <code class="path">overworld/</code> folder) is assigned to all overworlds</li>
             <li><code>level:</code> switches back to specifying resources for levels</li>
             <li>level 107 is assigned the resource <code class="path">special.asm</code> (which takes one extra byte) with an extra byte of 100 (decimal), and then the resource <code class="path">music.asm</code> from the <code class="path">overworld/</code> folder.</li>
         </ul>
@@ -567,7 +524,7 @@ main:
             Game mode code's <code>init:</code> and <code>main:</code> labels will run at the start of the main game loop.  On the first frame the mode is active, <code>init:</code> is run, and on all subsequent frames, <code>main:</code> is run.  The <code>end:</code> label is run after the entire rest of the game loop, including the $0420 -> $0400 conversion routine.  You may have noticed that UberASM Tool supports game modes $00-FF, even though SMW only uses game modes $00-29.  Any game mode $2A or higher is a custom mode, and thus there will be no base SMW routine to run for that frame (except for the standard NMI routine).
         </p>
         <p>
-            For all resource types, the <code>nmi:</code> label runs early during SMW's NMI routine.  Level resources have their NMI label called during game modes $13 and $14, and overworld resources during game modes $0D and $0E.  In both cases, actual game mode code under "nmi:" will run first.  See <a href="#NMI">NMI</a> for more information.  As of version 2.1, level NMI routines also run in game modes $05-07 in order to be active on the title screen, but this can be disabled by editing <code class="path">asm/base/uber_defines.asm</code> and changing the <code>!DisableTitleScreenLevelNMI</code> define to 1.
+            For all resource types, the <code>nmi:</code> label runs early during SMW's NMI routine.  Level resources have their NMI label called during game modes $13 and $14, and overworld resources during game modes $0D and $0E.  In both cases, actual game mode code under "nmi:" will run first.  See <a href="#NMI">NMI</a> for more information.
         </p>
 
         <h3 id="DBR">The DBR</h3>
@@ -579,13 +536,7 @@ main:
         <h3 id="ExtraBytes">Extra Bytes</h3>
 
         <p>
-            To tell UberASM Tool that a resource takes a fixed number of extra bytes, it must contain a line of the exact form (starting at column 1) <code>;&gt;bytes &lt;number&gt;</code> somewhere in the resource's <code class="path">.asm</code> file.  Only the first such line is read, and <code>&lt;number&gt;</code> must be a decimal number in the range 0-255 that says how many extra bytes this resource uses.
-        </p>
-        <p>
-            As of version 2.1, UAT also allows resources to take a variable number of extra bytes; to indicate this, use the line <code>;&gt;bytes any</code> instead.  This will cause UAT to accept any number of bytes (including none, max still 255) to be specified each time a resource is invoked in the list file.  In this case, the first byte passed to the resource will be a count of the number of bytes that were supplied in the list file (which may be 0 if none were specified), and the extra bytes themselves will start from the second byte.
-        </p>
-        <p>
-            Also as of version 2.1, users can specify word and long values as extra bytes in the list file (see above for how).  UAT will store these in little-endian order, so for example, if a user specifies a 2-byte value as <code>(@300)</code>, this will be stored in order as <code>2C 01</code>, since 300 decimal = 12C hex.
+            To tell UberASM Tool that a resource takes extra bytes, it must contain a line of the exact form (starting at column 1) <code>;&gt;bytes &lt;number&gt;</code> somewhere in the resource's <code class="path">.asm</code> file.  Only the first such line is read, and <code>&lt;number&gt;</code> must be a decimal number in the range 0-255 that says how many extra bytes this resource uses.
         </p>
         <p>
             Generally UAT passes a 16-bit pointer to the extra bytes for the current level/gamemode/overworld in $00-01.  So for example, to load the third extra byte, you can use the code:
@@ -772,7 +723,7 @@ MyRoutine:
             UberASM Tool was inspired by GPS, Sprite Tool, edit1754's levelASM tool, levelASM+NMI version and 33953YoShI's japanese levelASM tool.
         </p>
         <p>
-            <a href="https://github.com/RPGHacker/asar">Asar 1.91</a>, currently maintained by RPGHacker
+            <a href="https://github.com/RPGHacker/asar">Asar 1.81</a>, currently maintained by RPGHacker
         </p>
         <p>
             <a href="https://github.com/benjamin-hodgson/Pidgin">Pidgin 3.2.0</a> by Benjamin Hodgson
